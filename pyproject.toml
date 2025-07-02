@@ -80,6 +80,7 @@ test = [
     "coverage>=7.0.0",
     "pytest-benchmark>=4.0.0",
     "memory-profiler>=0.60.0",
+    "ruff>=0.1.0",
 ]
 
 # Dependency resolution tools
