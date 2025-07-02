@@ -1,0 +1,208 @@
+[project]
+name = "dep-hallucinator"
+version = "1.0.0"
+description = "Advanced security scanner for detecting AI-generated dependency confusion vulnerabilities with signature verification support"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [
+    { name = "Serhan Bahar", email = "serhan@swb.sh" },
+]
+keywords = ["security", "dependency", "vulnerability", "scanner", "ai", "hallucination"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: System :: Systems Administration",
+]
+# Core dependencies - minimal for production
+dependencies = [
+    "click>=8.0.0",
+    "httpx[http2]>=0.24.0",  # HTTP/2 support for better performance
+    "structlog>=23.0.0",
+    # Conditional TOML support for older Python versions
+    "toml>=0.10.0; python_version<'3.11'",
+]
+
+[project.optional-dependencies]
+# Rich UI dependencies - optional for better UX
+rich = [
+    "rich>=13.0.0",
+]
+
+# Full feature set including ML and advanced analysis
+full = [
+    "rich>=13.0.0",
+    "numpy>=1.20.0; platform_machine!='arm64' or python_version>='3.9'",
+    "scikit-learn>=1.0.0; platform_machine!='arm64' or python_version>='3.9'",
+]
+
+# Production deployment dependencies
+production = [
+    "uvloop>=0.17.0; sys_platform!='win32'",  # Faster event loop
+    "orjson>=3.8.0",  # Faster JSON processing
+    "lz4>=4.0.0",  # Fast compression for caching
+]
+
+# Development dependencies
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-httpx>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+    "bandit>=1.7.0",
+    "safety>=3.0.0",
+    "build>=0.10.0",
+    "twine>=4.0.0",
+    "rich>=13.0.0",  # For development
+]
+
+# Testing dependencies
+test = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-httpx>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "coverage>=7.0.0",
+    "pytest-benchmark>=4.0.0",
+    "memory-profiler>=0.60.0",
+]
+
+# Dependency resolution tools
+resolvers = [
+    "pipdeptree>=2.0.0",
+    "pip-tools>=6.0.0",
+]
+
+# Security scanning tools
+security = [
+    "bandit>=1.7.0",
+    "safety>=3.0.0",
+]
+
+# All features combined
+all = [
+    "rich>=13.0.0",
+    "numpy>=1.20.0; platform_machine!='arm64' or python_version>='3.9'",
+    "scikit-learn>=1.0.0; platform_machine!='arm64' or python_version>='3.9'",
+    "uvloop>=0.17.0; sys_platform!='win32'",
+    "orjson>=3.8.0",
+    "lz4>=4.0.0",
+]
+
+[project.scripts]
+dep-hallucinator = "dep_hallucinator.main:cli"
+
+[project.urls]
+"Homepage" = "https://github.com/serhanwbahar/dep-hallucinator"
+"Documentation" = "https://github.com/serhanwbahar/dep-hallucinator#readme"
+"Repository" = "https://github.com/serhanwbahar/dep-hallucinator"
+"Bug Reports" = "https://github.com/serhanwbahar/dep-hallucinator/issues"
+"Changelog" = "https://github.com/serhanwbahar/dep-hallucinator/releases"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+show_error_codes = true
+show_column_numbers = true
+
+[tool.ruff]
+target-version = "py38"
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+    "PERF", # Performance improvements
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --disable-warnings"
+testpaths = [
+    "tests",
+]
+python_files = [
+    "test_*.py",
+    "*_test.py",
+]
+markers = [
+    "slow: marks tests as slow",
+    "integration: marks tests as integration tests",
+    "performance: marks tests as performance tests",
+]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+parallel = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+show_missing = true
+precision = 2

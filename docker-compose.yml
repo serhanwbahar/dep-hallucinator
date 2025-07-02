@@ -1,0 +1,214 @@
+version: '3.8'
+
+services:
+  # Production service
+  dep-hallucinator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      args:
+        BUILD_ENV: production
+    image: dep-hallucinator:production
+    container_name: dep-hallucinator-prod
+    restart: unless-stopped
+    
+    # Resource limits for production
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    
+    # Environment variables
+    environment:
+      - DEP_HALLUCINATOR_PRODUCTION=true
+      - DEP_HALLUCINATOR_ENV=production
+      - DEP_HALLUCINATOR_LOG_LEVEL=INFO
+      - DEP_HALLUCINATOR_ENABLE_FILE_LOGGING=true
+      - DEP_HALLUCINATOR_LOG_FILE=/app/logs/scanner.log
+      - DEP_HALLUCINATOR_CACHE_MEMORY_MB=128
+      - DEP_HALLUCINATOR_MAX_MEMORY_MB=512
+      - DEP_HALLUCINATOR_MAX_ASYNC_WORKERS=15
+      - DEP_HALLUCINATOR_RATE_LIMIT=15.0
+      - DEP_HALLUCINATOR_MAX_CONCURRENT=25
+    
+    # Volumes for persistence
+    volumes:
+      - ./data:/app/data:rw
+      - ./logs:/app/logs:rw
+      - ./cache:/app/cache:rw
+      - ./config:/app/config:ro
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "dep-hallucinator", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    read_only: false  # Needs write access for logs and cache
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    
+    # Network configuration
+    networks:
+      - dep-scanner-network
+    
+    # Log configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Development service
+  dep-hallucinator-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+      args:
+        BUILD_ENV: development
+    image: dep-hallucinator:development
+    container_name: dep-hallucinator-dev
+    
+    # Environment variables for development
+    environment:
+      - DEP_HALLUCINATOR_ENV=development
+      - DEP_HALLUCINATOR_LOG_LEVEL=DEBUG
+      - DEP_HALLUCINATOR_ENABLE_FILE_LOGGING=true
+      - DEP_HALLUCINATOR_LOG_FILE=/app/logs/scanner.log
+    
+    # Mount source code for development
+    volumes:
+      - .:/app:rw
+      - ./logs:/app/logs:rw
+      - ./cache:/app/cache:rw
+    
+    # Override entrypoint for development
+    entrypoint: ["bash"]
+    command: ["-c", "while true; do sleep 3600; done"]
+    
+    networks:
+      - dep-scanner-network
+    
+    profiles:
+      - dev
+
+  # High-performance variant for large scans
+  dep-hallucinator-hpc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      args:
+        BUILD_ENV: full
+    image: dep-hallucinator:hpc
+    container_name: dep-hallucinator-hpc
+    restart: unless-stopped
+    
+    # Higher resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    
+    # High-performance configuration
+    environment:
+      - DEP_HALLUCINATOR_PRODUCTION=true
+      - DEP_HALLUCINATOR_ENV=high-performance
+      - DEP_HALLUCINATOR_LOG_LEVEL=INFO
+      - DEP_HALLUCINATOR_CACHE_MEMORY_MB=256
+      - DEP_HALLUCINATOR_MAX_MEMORY_MB=1024
+      - DEP_HALLUCINATOR_MAX_ASYNC_WORKERS=30
+      - DEP_HALLUCINATOR_RATE_LIMIT=25.0
+      - DEP_HALLUCINATOR_MAX_CONCURRENT=40
+      - DEP_HALLUCINATOR_HTTP_POOL_CONNECTIONS=20
+      - DEP_HALLUCINATOR_ENABLE_UVLOOP=true
+      - DEP_HALLUCINATOR_ENABLE_ORJSON=true
+      - DEP_HALLUCINATOR_ENABLE_LZ4=true
+    
+    volumes:
+      - ./data:/app/data:rw
+      - ./logs:/app/logs:rw
+      - ./cache:/app/cache:rw
+      - ./config:/app/config:ro
+    
+    networks:
+      - dep-scanner-network
+    
+    profiles:
+      - hpc
+
+  # Resource-constrained variant for limited environments
+  dep-hallucinator-lite:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      args:
+        BUILD_ENV: production
+    image: dep-hallucinator:lite
+    container_name: dep-hallucinator-lite
+    restart: unless-stopped
+    
+    # Minimal resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+    
+    # Resource-constrained configuration
+    environment:
+      - DEP_HALLUCINATOR_PRODUCTION=true
+      - DEP_HALLUCINATOR_ENV=resource-constrained
+      - DEP_HALLUCINATOR_LOG_LEVEL=WARNING
+      - DEP_HALLUCINATOR_CACHE_MEMORY_MB=64
+      - DEP_HALLUCINATOR_MAX_MEMORY_MB=256
+      - DEP_HALLUCINATOR_MAX_ASYNC_WORKERS=10
+      - DEP_HALLUCINATOR_RATE_LIMIT=5.0
+      - DEP_HALLUCINATOR_MAX_CONCURRENT=10
+      - DEP_HALLUCINATOR_HTTP_POOL_CONNECTIONS=5
+    
+    volumes:
+      - ./data:/app/data:rw
+      - ./logs:/app/logs:rw
+      - ./cache:/app/cache:rw
+      - ./config:/app/config:ro
+    
+    networks:
+      - dep-scanner-network
+    
+    profiles:
+      - lite
+
+networks:
+  dep-scanner-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  scanner-data:
+    driver: local
+  scanner-logs:
+    driver: local
+  scanner-cache:
+    driver: local 
