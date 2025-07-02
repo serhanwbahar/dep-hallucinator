@@ -29,7 +29,7 @@ jobs:
         pip install -e ".[test]"
 
     - name: Lint with Ruff
-      run: ruff check src/ tests/
+      run: python -m ruff check src/ tests/
 
     - name: Test with pytest
-      run: pytest tests/ -v
+      run: python -m pytest tests/ -v
