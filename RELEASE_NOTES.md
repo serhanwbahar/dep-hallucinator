@@ -76,10 +76,11 @@ export DEP_HALLUCINATOR_TIMEOUT=30
 pip install dep-hallucinator
 ```
 
-## Migration from v0.x
+## Breaking Changes
 
-- **Old**: `dep-hallucinator --file requirements.txt`
-- **New**: `dep-hallucinator scan requirements.txt`
+- New CLI structure with subcommands
+- Configuration file format updated
+- Environment variable naming standardized
 
 ## Technical Changes
 

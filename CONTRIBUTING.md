@@ -56,10 +56,10 @@ make type-check
 - Test coverage expansion
 
 **Good First Issues:**
-- Add poetry.lock support
-- Improve error messages
-- Add configuration file support
-- Create example reports
+- Improve error messages and user feedback
+- Add support for more package managers
+- Enhance test coverage for edge cases
+- Performance optimizations for large files
 
 ## Code Guidelines
 

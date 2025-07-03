@@ -141,9 +141,6 @@ docker compose up dep-hallucinator
 ```bash
 # Built-in health check
 dep-hallucinator --version
-
-# Container health check
-curl http://localhost:8080/health
 ```
 
 ### Performance Stats
@@ -152,12 +149,10 @@ curl http://localhost:8080/health
 dep-hallucinator --performance-stats
 ```
 
-### Metrics
-
-Enable metrics collection:
+### Performance Statistics
 
 ```bash
-export DEP_HALLUCINATOR_ENABLE_METRICS=true
+dep-hallucinator --performance-stats
 ```
 
 ## Security

@@ -15,7 +15,7 @@ Dep-Hallucinator detects these non-existent packages and suspicious packages tha
 * **Registry scanning**: Checks PyPI, npm, Maven Central, Crates.io, and Go Modules
 * **ML detection**: Identifies AI-generated naming patterns
 * **Heuristic analysis**: Analyzes package age, downloads, and metadata
-* **Risk classification**: HIGH/MEDIUM/LOW risk levels with explanations
+* **Risk classification**: CRITICAL/HIGH/MEDIUM/LOW risk levels with explanations
 * **Multi-language support**: Python, JavaScript, Java, Rust, Go
 * **SBOM generation**: Creates Software Bill of Materials
 * **CI/CD integration**: Exit codes and JSON output
@@ -26,7 +26,7 @@ Dep-Hallucinator detects these non-existent packages and suspicious packages tha
 |----------|----------|------------|
 | Python | PyPI | `requirements.txt`, `poetry.lock`, `Pipfile.lock` |
 | JavaScript | npm | `package.json`, `yarn.lock` |
-| Java | Maven Central | `pom.xml`, `build.gradle` |
+| Java | Maven Central | `pom.xml`, `build.gradle`, `build.gradle.kts` |
 | Rust | Crates.io | `Cargo.toml`, `Cargo.lock` |
 | Go | Go Modules | `go.mod`, `go.sum` |
 
@@ -110,8 +110,14 @@ make test
 
 - `0`: No critical vulnerabilities
 - `1`: Critical vulnerabilities found
-- `2`: High risk packages found (with `--fail-on-high`)
-- `3`: Scan errors
+- `130`: Scan interrupted
+
+## Documentation
+
+* [Complete Documentation](documentation.md) - Comprehensive usage guide
+* [Security Policy](security.md) - Vulnerability reporting
+* [Contributing](contributing.md) - Development guidelines
+* [Deployment](deployment.md) - Production deployment
 
 ## License
 

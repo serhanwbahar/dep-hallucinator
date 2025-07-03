@@ -23,10 +23,10 @@
 
 ### For Contributors
 
-1. **Fork the repository**
+1. **Fork the repository** on GitHub
 2. **Clone your fork**
    ```bash
-   git clone git@github.com:yourusername/dep-hallucinator.git
+   git clone <your-fork-url>
    cd dep-hallucinator
    ```
 
