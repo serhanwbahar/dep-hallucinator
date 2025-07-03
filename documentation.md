@@ -175,11 +175,11 @@ Create `.dep-hallucinator.json`:
 
 This repository includes several specialized documentation files:
 
-* **[README.md](README.md)** - Quick start guide and overview
-* **[security.md](security.md)** - Security policy and vulnerability reporting
-* **[contributing.md](contributing.md)** - Development guidelines and contribution process
-* **[deployment.md](deployment.md)** - Basic deployment and CI/CD integration
-* **[production_deployment.md](production_deployment.md)** - Production deployment configurations
-* **[release_notes.md](release_notes.md)** - Version 1.0.0 features and changes
-* **[branching_strategy.md](branching_strategy.md)** - Git workflow and branch management
-* **[structured_logging.md](structured_logging.md)** - JSON logging for SIEM integration
+* **[README.md](./README.md)** - Quick start guide and overview
+* **[security.md](./security.md)** - Security policy and vulnerability reporting
+* **[contributing.md](./contributing.md)** - Development guidelines and contribution process
+* **[deployment.md](./deployment.md)** - Basic deployment and CI/CD integration
+* **[production_deployment.md](./production_deployment.md)** - Production deployment configurations
+* **[release_notes.md](./release_notes.md)** - Version 1.0.0 features and changes
+* **[branching_strategy.md](./branching_strategy.md)** - Git workflow and branch management
+* **[structured_logging.md](./structured_logging.md)** - JSON logging for SIEM integration

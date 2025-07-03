@@ -114,10 +114,10 @@ make test
 
 ## Documentation
 
-* [Complete Documentation](documentation.md) - Comprehensive usage guide
-* [Security Policy](security.md) - Vulnerability reporting
-* [Contributing](contributing.md) - Development guidelines
-* [Deployment](deployment.md) - Production deployment
+* [Complete Documentation](./documentation.md) - Comprehensive usage guide
+* [Security Policy](./security.md) - Vulnerability reporting
+* [Contributing](./contributing.md) - Development guidelines
+* [Deployment](./deployment.md) - Production deployment
 
 ## License
 
