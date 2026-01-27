@@ -1,12 +1,12 @@
 [project]
 name = "dep-hallucinator"
-version = "1.0.1"
+version = "1.0.2"
 description = "Advanced security scanner for detecting AI-generated dependency confusion vulnerabilities with signature verification support"
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "MIT" }
 authors = [
-    { name = "Serhan", email = "serhan.buyukbay@gmail.com" },
+    { name = "Serhan", email = "serhan.swb@gmail.com" },
 ]
 keywords = ["security", "dependency", "vulnerability", "scanner", "ai", "hallucination"]
 classifiers = [
